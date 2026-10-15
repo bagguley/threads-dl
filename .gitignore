@@ -33,3 +33,6 @@ Thumbs.db
 
 # Kotlin
 *.kotlin
+
+# Runtime debug dumps
+debug/

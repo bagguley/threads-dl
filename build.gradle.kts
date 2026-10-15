@@ -1,9 +1,9 @@
 plugins {
-    kotlin("jvm") version "2.0.21"
-    kotlin("plugin.serialization") version "2.0.21"
-    application
-    id("org.openjfx.javafxplugin") version "0.1.0"
-    id("com.github.ben-manes.versions") version "0.52.0"
+    alias(libs.plugins.kotlin.jvm)
+    alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.compose)
+    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.versions)
 }
 
 group = "com.threadsdl"
@@ -11,43 +11,42 @@ version = "1.0.0"
 
 repositories {
     mavenCentral()
-}
-
-javafx {
-    version = "21.0.1"
-    modules = listOf("javafx.controls", "javafx.graphics", "javafx.fxml")
+    google()
+    maven("https://maven.pkg.jetbrains.space/public/p/compose/dev")
 }
 
 dependencies {
-    // Kotlin standard library
-    implementation(kotlin("stdlib"))
+    // Compose Multiplatform for Desktop
+    implementation(compose.desktop.currentOs)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.components.resources)
 
     // HTTP client
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation(libs.okhttp)
 
     // JSON serialization
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.2")
-
-    // UI framework - TornadoFX
-    implementation("no.tornado:tornadofx:1.7.20")
+    implementation(libs.kotlinx.serialization.json)
 
     // Coroutines for async operations
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.7.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-javafx:1.7.3")
+    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.kotlinx.coroutines.swing)
 
     // Logging
-    implementation("org.slf4j:slf4j-simple:2.0.9")
+    implementation(libs.slf4j.simple)
 
     // Selenium for headless browser automation
-    implementation("org.seleniumhq.selenium:selenium-java:4.27.0")
-    implementation("org.seleniumhq.selenium:selenium-chrome-driver:4.27.0")
+    implementation(libs.selenium.java)
+    implementation(libs.selenium.chrome.driver)
 }
 
-application {
-    mainClass.set("com.threadsdl.MainKt")
-    applicationDefaultJvmArgs = listOf(
-        "--enable-native-access=ALL-UNNAMED"
-    )
+compose.desktop {
+    application {
+        mainClass = "com.threadsdl.MainKt"
+    }
+}
+
+compose.resources {
+    packageOfResClass = "com.threadsdl.generated.resources"
 }
 
 kotlin {
